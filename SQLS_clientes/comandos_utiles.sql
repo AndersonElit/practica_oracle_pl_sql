@@ -66,3 +66,8 @@ CALL utilities.reporte_total_numero_clientes();
 SET SERVEROUTPUT ON
 CALL utilities.reporte_por_empresa(44);
 */
+
+/*
+SET SERVEROUTPUT ON
+CALL utilities.consultar_creacion_cliente(25);
+*/

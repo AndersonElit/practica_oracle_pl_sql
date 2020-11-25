@@ -16,6 +16,7 @@ IS
     PROCEDURE buscar_cliente(id_usuario IN NUMBER);
     PROCEDURE reporte_total_numero_clientes;
     PROCEDURE reporte_por_empresa(id_e IN NUMBER);
+    PROCEDURE consultar_creacion_cliente(id_cliente IN NUMBER);
 END;
 /
 CREATE PACKAGE BODY UTILITIES
@@ -295,6 +296,24 @@ IS
         END IF;        
     END reporte_por_empresa;
     
+    --reporte creacion cliente
+    FUNCTION consultar_creacion_cliente(id_cliente NUMBER) RETURN VARCHAR2
+    IS
+        respuesta VARCHAR2(200);
+        registro reporte_acciones_clientes%ROWTYPE;
+        cli_ex NUMBER;
+    BEGIN
+        SELECT COUNT(*) INTO cli_ex FROM reporte_acciones_clientes WHERE id_persona = id_cliente;
+        IF cli_ex = 0 THEN
+            respuesta := 'la empresa no existe';
+            RETURN respuesta;
+        ELSE
+            SELECT * INTO registro FROM reporte_acciones_clientes WHERE accion = 'INSERT' AND id_persona = id_cliente;
+            respuesta := 'fecha de creacion: ' || registro.fecha || ' hora: ' || registro.hora;
+            RETURN respuesta;
+        END IF;
+    END consultar_creacion_cliente;
+    
     /*
     PROCEDURES
     */
@@ -404,5 +423,13 @@ IS
         respuesta := reporte_por_empresa(id_e);
         DBMS_OUTPUT.PUT_LINE(respuesta);
     END reporte_por_empresa;
+    
+    PROCEDURE consultar_creacion_cliente(id_cliente IN NUMBER)
+    AS
+        respuesta VARCHAR2(100);
+    BEGIN
+        respuesta := consultar_creacion_cliente(id_cliente);
+        DBMS_OUTPUT.PUT_LINE(respuesta);
+    END consultar_creacion_cliente;
     
 END UTILITIES;
